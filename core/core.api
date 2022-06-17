@@ -1,0 +1,155 @@
+service core-api {
+	//登录
+	@handler UserLogin
+	post /user/login(LoginRequest) returns (LoginReplay)
+	//查询用户详情
+	@handler UserDetail
+	get /user/userDetail(DetailRequest) returns (DetailReplay)
+	//邮箱验证码发送
+	@handler MailCodeSandRegister
+	post /mail/code/send/register(MailCodeSendRequest) returns (MailCodeSendReplay)
+	//用户注册
+	@handler UserRegister
+	post /user/register (UserRegisterRequest) returns (UserRegisterReplay)
+	
+}
+
+@server (
+	middleware: Auth
+)
+service core-api{
+	// 文件上传
+	@handler FileUpload
+	post /file/upload(FileUploadRequest) returns (FileUploadReply)
+	//用户文件的关联存储
+	@handler UserRepositorySave
+	post /user/repository/save (UserRepositorySaveRequest) returns (UserRepositorySaveReply)
+	//用户文件列表查询
+	@handler UserFileList
+	post /user/file/list (UserFileListRequest) returns (UserFileListReply)
+	//用户文件修改文件名字
+	@handler UserFileNameUpdate
+	post /user/file/name/update (UserFileNameUpdateRequest) returns (UserFileNameUpdateReply)
+	//用户 文件夹创建
+	@handler UserFolderCreate
+	post /user/folder/create (UserFolderCreateRequest) returns (UserFolderCreateReply)
+	//用户 文件删除
+	@handler UserFileDelete
+	delete /user/file/delete (UserFileDeleteRequest) returns (UserFileDeleteReply)
+	//用户 文件移动
+	@handler UserFileMove
+	put /user/file/move (UserFileMoveRequest) returns (UserFileMoveReply)
+	//用户创建分享记录
+	@handler UserShareCreate
+	post /user/share/create (UserShareCreateRequest) returns (UserShareCreateReply)
+}
+
+type UserShareCreateRequest {
+	RepositoryIdentity string `json:"repository_identity"` //文件仓库标识
+	ExpiredTime        string `json:"expiredTime"`         //过期时间
+}
+type UserShareCreateReply {
+	Identity string `json:"identity"` //文件分享标识
+}
+
+type UserFileMoveRequest {
+	Identity       string `json:"identity"`        //文件标识
+	ParentIdentity string `json:"parent_identity"` //父文件夹身份标识
+}
+type UserFileMoveReply{}
+
+type UserFileDeleteRequest {
+	Identity string `json:"identity"`
+}
+type UserFileDeleteReply {
+}
+
+type UserFolderCreateRequest {
+	ParentId int64  `json:"parentId"` //文件夹层级
+	Name     string `json:"name"`     //文件夹名字
+}
+type UserFolderCreateReply {
+	Identity string `json:"identity"` //文件夹标识
+}
+type UserFileNameUpdateRequest {
+	Identity string `json:"identity"`
+	Name     string `json:"name"`
+}
+
+type UserFileNameUpdateReply {
+}
+
+type UserFileListRequest {
+	Id   int64 `json:"id,optional"`
+	Page int   `json:"page,optional"`
+	Size int   `json:"size,optional"`
+}
+
+type UserFileListReply {
+	List  []*UserFile `json:"list,optional"`
+	Count int64       `json:"count,optional"`
+}
+type UserFile {
+	Id                 int64  `json:"id,optional"`
+	Identity           string `json:"identity,optional"`
+	RepositoryIdentity string `json:"repository_identity,optional"`
+	Name               string `json:"name,optional"`
+	Exc                string `json:"exc,optional"`
+	Size               int64  `json:"size,optional"`
+	Path               string `json:"path,optional"`
+}
+
+type UserRepositorySaveRequest {
+	ParentId           int64  `json:"parentId"`
+	RepositoryIdentity string `json:"repositoryIdentity"`
+	Ext                string `json:"ext"`
+	Name               string `json:"name"`
+}
+type UserRepositorySaveReply {
+}
+type FileUploadRequest {
+	Hash string `json:"hash,optional"`
+	Name string `json:"name,optional"`
+	Ext  string `json:"ext,optional"`
+	Size int64  `json:"size,optional"`
+	Path string `json:"path,optional"`
+}
+
+type FileUploadReply {
+	Identity string `json:"identity"`
+	Ext      string `json:"ext"`
+	Name     string `json:"name"`
+}
+
+type UserRegisterRequest {
+	Name     string `json:"name"`
+	Password string `json:"password"`
+	Email    string `json:"email"`
+	Code     string `json:"code"`
+}
+
+type UserRegisterReplay {
+}
+
+type LoginRequest {
+	Name     string `json:"name"`
+	Password string `json:"password"`
+}
+
+type LoginReplay {
+	Token string `json:"token"`
+}
+
+type DetailRequest {
+	Identity string `json:"identity"`
+}
+type DetailReplay {
+	Name  string `json:"name"`
+	Email string `json:"email"`
+}
+type MailCodeSendRequest {
+	Email string `json:"email"`
+}
+type MailCodeSendReplay {
+	//返回一个空的，因为是发送给对面邮箱，不需要给前端
+}
