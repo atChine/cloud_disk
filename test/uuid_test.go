@@ -6,6 +6,6 @@ import (
 )
 
 func TestGenerateUUID(t *testing.T) {
-	uuid := helper.GetUUID()
+	uuid := helper.UUID()
 	println(uuid)
 }

@@ -37,5 +37,11 @@ var CosBucket = "https://cloud-disk-1312527462.cos.ap-nanjing.myqcloud.com"
 // PageSize 分页的默认页数
 var PageSize = 20
 
-//时间格式
+// TimeFormat 时间格式
 var TimeFormat = "2006-01-02 15:04:05"
+
+// TokenExpire token过期时间
+var TokenExpire = 3600
+
+// RefreshTokenExpire 刷新token过期时间
+var RefreshTokenExpire = 7200

@@ -1,14 +1,13 @@
 package logic
 
 import (
+	"cloud_disk/core/define"
 	"cloud_disk/core/helper"
+	"cloud_disk/core/internal/svc"
+	"cloud_disk/core/internal/types"
 	"cloud_disk/core/models"
 	"context"
 	"errors"
-	"fmt"
-
-	"cloud_disk/core/internal/svc"
-	"cloud_disk/core/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -39,12 +38,17 @@ func (l *UserLoginLogic) UserLogin(req *types.LoginRequest) (resp *types.LoginRe
 		return nil, errors.New("用户名或者密码错误")
 	}
 	//生成token
-	token, err := helper.GenerateToken(uint64(user.Id), user.Identity, user.Name)
+	token, err := helper.GenerateToken(uint64(user.Id), user.Identity, user.Name, define.TokenExpire)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(token)
+	//刷新token
+	generateToken, err := helper.GenerateToken(uint64(user.Id), user.Identity, user.Name, define.RefreshTokenExpire)
+	if err != nil {
+		return nil, err
+	}
 	resp = new(types.LoginReplay)
 	resp.Token = token
+	resp.RefreshToken = generateToken
 	return
 }

@@ -57,6 +57,37 @@ service core-api{
 	//用户创建分享记录
 	@handler UserShareCreate
 	post /user/share/create (UserShareCreateRequest) returns (UserShareCreateReply)
+	//用户资源共享保存
+	@handler ShareFileSave
+	post /share/file/save (ShareFileSaveRequest) returns (ShareFileSaveReply)
+	//刷新Authorization
+	@handler RefreshAuthorization
+	post /refresh/authorization (RefreshAuthorizationRequest) returns (RefreshAuthorizationReply)
+	//文件上传前基本信息处理
+	@handler FileUploadPrepare
+	post /file/upload/prepare (FileUploadPrePareRequest) returns (FileUploadPrePareReply)
+}
+
+type FileUploadPrePareRequest {
+	Md5  string `json:"md5"`  //文件md5,用来判断文件是否存在
+	Name string `json:"name"` //文件名称
+}
+type FileUploadPrePareReply {
+	Identity string `json:"identity"`  //文件如果存在，则返回文件identity
+	UploadId string `json:"upload_id"` //如果文件不存在，则返回上传id
+}
+type RefreshAuthorizationRequest{}
+type RefreshAuthorizationReply {
+	Token        string `json:"token"`
+	RefreshToken string `json:"refresh_token"`
+}
+
+type ShareFileSaveRequest {
+	RepositoryIdentity string `json:"repository_identity"`
+	ParentId           int64  `json:"parent_id"` //父文件夹id
+}
+type ShareFileSaveReply {
+	Identity string `json:"identity"` //用户池子的identity
 }
 
 type UserShareCreateRequest {
@@ -152,7 +183,8 @@ type LoginRequest {
 }
 
 type LoginReplay {
-	Token string `json:"token"`
+	Token        string `json:"token"`
+	RefreshToken string `json:"refresh_token"`
 }
 
 type DetailRequest {
