@@ -11,7 +11,22 @@ service core-api {
 	//用户注册
 	@handler UserRegister
 	post /user/register (UserRegisterRequest) returns (UserRegisterReplay)
+	//获取分享的资源详情
+	@handler ShareFileBasicDetail
+	get /share/file/basic/detail(ShareFileBasicDetailRequest) returns (ShareFileBasicDetailReplay)
 	
+}
+
+type ShareFileBasicDetailRequest {
+	Identity string `json:"identity"` //分享资源表identity
+}
+
+type ShareFileBasicDetailReplay {
+	RepositoryIdentity string `json:"repository_identity"` //资源表identity
+	Name               string `json:"name"`                //资源名称
+	Size               int64  `json:"size"`                //资源大小
+	Ext                string `json:"ext"`                 //资源扩展名
+	Path               string `json:"path"`                //资源路径
 }
 
 @server (
@@ -45,8 +60,8 @@ service core-api{
 }
 
 type UserShareCreateRequest {
-	RepositoryIdentity string `json:"repository_identity"` //文件仓库标识
-	ExpiredTime        string `json:"expiredTime"`         //过期时间
+	UserRepositoryIdentity string `json:"user_repository_identity"` //文件仓库标识
+	ExpiredTime            int    `json:"expired_time"`             //过期时间
 }
 type UserShareCreateReply {
 	Identity string `json:"identity"` //文件分享标识

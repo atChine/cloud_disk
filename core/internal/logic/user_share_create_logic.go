@@ -1,11 +1,12 @@
 package logic
 
 import (
-	"context"
-	"errors"
-
+	"cloud_disk/core/helper"
 	"cloud_disk/core/internal/svc"
 	"cloud_disk/core/internal/types"
+	"cloud_disk/core/models"
+	"context"
+	"errors"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -29,5 +30,30 @@ func (l *UserShareCreateLogic) UserShareCreate(req *types.UserShareCreateRequest
 	if userIdentity == "" {
 		return nil, errors.New("用户身份不能为空")
 	}
+	uuid := helper.UUID()
+	ur := new(models.UserRepository)
+	get, err := l.svcCtx.Engine.Where("identity = ?", req.UserRepositoryIdentity).Get(ur)
+	if err != nil {
+		return nil, errors.New("没有identity，查询用户失败")
+	}
+	if !get {
+		return nil, errors.New("没有identity，查询用户失败")
+	}
+	data := &models.ShareBasic{
+		Identity:               uuid,
+		UserIdentity:           userIdentity,
+		UserRepositoryIdentity: req.UserRepositoryIdentity,
+		RepositoryIdentity:     ur.RepositoryIdentity,
+		ExpiredTime:            req.ExpiredTime,
+	}
+	insert, err := l.svcCtx.Engine.Insert(data)
+	if err != nil {
+		return nil, errors.New("创建分享失败")
+	}
+	if insert != 1 {
+		return nil, errors.New("创建分享失败")
+	}
+	resp = new(types.UserShareCreateReply)
+	resp.Identity = uuid
 	return
 }
