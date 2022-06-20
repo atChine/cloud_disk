@@ -16,10 +16,10 @@ type UserClaim struct {
 var JwtKey = "cloud_disk_key"
 
 // EmailPassword 邮箱密码
-var EmailPassword = "MIRWCVJMBVSVUCZN"
+var EmailPassword = "#######"
 
 // EmailAccount 邮箱账号
-var EmailAccount = "at911477183@163.com"
+var EmailAccount = "########"
 
 // CodeLength 验证码长度
 var CodeLength = 6
@@ -28,11 +28,11 @@ var CodeLength = 6
 var CodeExpire = 300
 
 //SECRETID 表示用户的 SecretId
-var SECRETID = "AKIDue9OO9eutd7LK3XlkTxCBvPdcMq54nHX"
+var SECRETID = "SecretId"
 
 //SECRETKEY 表示用户的 SecretKey
-var SECRETKEY = "6xZv1sUqxoQnumOlsjKgneFbiZAWcS2N"
-var CosBucket = "https://cloud-disk-1312527462.cos.ap-nanjing.myqcloud.com"
+var SECRETKEY = "SecretKey"
+var CosBucket = "https://cloud-disk-#######.cos.ap-nanjing.myqcloud.com"
 
 // PageSize 分页的默认页数
 var PageSize = 20

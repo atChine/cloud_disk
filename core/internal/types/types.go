@@ -2,7 +2,7 @@
 package types
 
 type ShareFileBasicDetailRequest struct {
-	Identity string `json:"identity"` //用户资源表identity
+	Identity string `json:"identity"` //分享资源表identity
 }
 
 type ShareFileBasicDetailReplay struct {
@@ -11,6 +11,56 @@ type ShareFileBasicDetailReplay struct {
 	Size               int64  `json:"size"`                //资源大小
 	Ext                string `json:"ext"`                 //资源扩展名
 	Path               string `json:"path"`                //资源路径
+}
+
+type FileUploadChunkEndRequest struct {
+	Key       string      `json:"key"`       //文件唯一标识
+	UploadId  string      `json:"upload_id"` //文件唯一标识
+	CosObject []CosObject `json:"cos_object"`
+}
+
+type CosObject struct {
+	PartNumber int    `json:"part_number"` //分片编号
+	ETag       string `json:"e_tag"`       //文件唯一标识
+}
+
+type FileUploadChunkEndReply struct {
+}
+
+type FileUploadChunkRequest struct {
+}
+
+type FileUploadChunkReply struct {
+	Etag string `json:"etag"` //文件唯一标识,就是md5
+}
+
+type FileUploadPrePareRequest struct {
+	Md5  string `json:"md5"`  //文件md5,用来判断文件是否存在
+	Name string `json:"name"` //文件名称
+	Ext  string `json:"ext"`  //文件扩展名
+}
+
+type FileUploadPrePareReply struct {
+	Identity string `json:"identity"`  //文件如果存在，则返回文件identity
+	UploadId string `json:"upload_id"` //如果文件不存在，则返回上传id
+	Key      string `json:"key"`       //文件key
+}
+
+type RefreshAuthorizationRequest struct {
+}
+
+type RefreshAuthorizationReply struct {
+	Token        string `json:"token"`
+	RefreshToken string `json:"refresh_token"`
+}
+
+type ShareFileSaveRequest struct {
+	RepositoryIdentity string `json:"repository_identity"`
+	ParentId           int64  `json:"parent_id"` //父文件夹id
+}
+
+type ShareFileSaveReply struct {
+	Identity string `json:"identity"` //用户池子的identity
 }
 
 type UserShareCreateRequest struct {
@@ -115,7 +165,8 @@ type LoginRequest struct {
 }
 
 type LoginReplay struct {
-	Token string `json:"token"`
+	Token        string `json:"token"`
+	RefreshToken string `json:"refresh_token"`
 }
 
 type DetailRequest struct {

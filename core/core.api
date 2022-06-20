@@ -66,15 +66,42 @@ service core-api{
 	//文件上传前基本信息处理
 	@handler FileUploadPrepare
 	post /file/upload/prepare (FileUploadPrePareRequest) returns (FileUploadPrePareReply)
+	//文件分片上传
+	@handler FileUploadChunk
+	post /file/upload/chunk (FileUploadChunkRequest) returns (FileUploadChunkReply)
+	//文件分片上传结束
+	@handler FileUploadChunkEnd
+	post /file/upload/chunk/end (FileUploadChunkEndRequest) returns (FileUploadChunkEndReply)
 }
 
+type FileUploadChunkEndRequest {
+	Key       string      `json:"key"`       //文件唯一标识
+	UploadId  string      `json:"upload_id"` //文件唯一标识
+	CosObject []CosObject `json:"cos_object"`
+}
+type CosObject {
+	PartNumber int    `json:"part_number"` //分片编号
+	ETag       string `json:"e_tag"`       //文件唯一标识
+}
+type FileUploadChunkEndReply {
+}
+type FileUploadChunkRequest { //form-data
+	//key    //文件唯一标识
+	//upload_id 	//上传id
+	//part_number //分片编号
+}
+type FileUploadChunkReply {
+	Etag string `json:"etag"` //文件唯一标识,就是md5
+}
 type FileUploadPrePareRequest {
 	Md5  string `json:"md5"`  //文件md5,用来判断文件是否存在
 	Name string `json:"name"` //文件名称
+	Ext  string `json:"ext"`  //文件扩展名
 }
 type FileUploadPrePareReply {
 	Identity string `json:"identity"`  //文件如果存在，则返回文件identity
 	UploadId string `json:"upload_id"` //如果文件不存在，则返回上传id
+	Key      string `json:"key"`       //文件key
 }
 type RefreshAuthorizationRequest{}
 type RefreshAuthorizationReply {
