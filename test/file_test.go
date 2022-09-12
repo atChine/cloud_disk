@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"fmt"
 	"io/ioutil"
+	"math"
 	"os"
 	"strconv"
 	"testing"
@@ -14,20 +15,22 @@ const chunkSize = 1024 * 1024 * 1 // 1MB
 
 //文件分片
 func TestFileFarg(t *testing.T) {
-	fileInfo, err := os.Stat("yyyyy.mp4")
+	fileInfo, err := os.Stat("img/laimeiyun.jpeg")
 	if err != nil {
 		t.Error(err)
 	}
 	//计算文件分片数量
-	var chunkNum = int(fileInfo.Size()/chunkSize) + 1
-	myFile, err := os.OpenFile("yyyyy.mp4", os.O_RDONLY, 0666)
+	//var chunkNum = int(fileInfo.Size()/chunkSize) + 1
+	//为什么不用+1，因为如果正好相等的时候，会出bug
+	var chunkNum = math.Ceil(float64(fileInfo.Size() / chunkSize))
+	myFile, err := os.OpenFile("img/laimeiyun.jpeg", os.O_RDONLY, 0666)
 	if err != nil {
 		t.Error(err)
 	}
 	//创建数组存放文件分片
 	bytes := make([]byte, chunkSize)
 	//循环读取文件分片
-	for i := 0; i < chunkNum; i++ {
+	for i := 0; i < int(chunkNum); i++ {
 		//指定读取文件分片的起始位置
 		myFile.Seek(int64(i*chunkSize), 0)
 		if chunkSize > fileInfo.Size()-int64(i*chunkSize) {

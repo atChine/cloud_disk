@@ -32,6 +32,17 @@ func (l *FileUploadPrepareLogic) FileUploadPrepare(req *types.FileUploadPrePareR
 		return nil, err
 	}
 	resp = new(types.FileUploadPrePareReply)
+	//if has {
+	//	//秒传成功
+	//	resp.Identity = rp.Identity
+	//} else {
+	//	key, upLoadId, err := helper.CosInitPart(req.Ext)
+	//	if err != nil {
+	//		return nil, err
+	//	}
+	//	resp.Key = key
+	//	resp.UploadId = upLoadId
+	//}
 	if has {
 		//秒传成功
 		resp.Identity = rp.Identity
